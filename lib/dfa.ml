@@ -149,10 +149,10 @@ let rec search_states dfa (state_map, word_map, queue) =
 
 
 let get_accept_strings dfa =
-  let state_map = [(dfa.start, "")] in
+  (* let state_map = [(dfa.start, "")] in
   let word_map = [("", StateSet.mem dfa.start dfa.finals)] in
-  let q = [dfa.start] in
-  let (state_map, word_map) = search_states dfa ([(dfa.start, "")], 
+  let q = [dfa.start] in *)
+  let (_, word_map) = search_states dfa ([(dfa.start, "")], 
                                                  [("", StateSet.mem dfa.start dfa.finals)], 
                                                  [dfa.start])  in
   (* format for alpharegex here *)
