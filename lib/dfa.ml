@@ -129,3 +129,39 @@ let accept dfa inp =
        | exception Not_found -> false
        | s -> step s cs in
   step dfa.start inp
+
+
+
+let rec search_states dfa (state_map, word_map, queue) =
+  match queue with
+  | [] -> state_map, word_map
+  | h :: t -> 
+    (* need to explore h *)
+    (* for c in char_set, check next h c *)
+    let w = List.assoc h state_map in
+    let update c s (s_map, w_map, q) = 
+      if List.mem_assoc s s_map then (s_map, w_map, q) else
+      (* need to add s to q and update maps *)
+      let new_w = w ^ (Char.escaped c) in
+      ((s, new_w)::s_map, (new_w, StateSet.mem s dfa.finals)::w_map, s::q)
+      in
+    search_states dfa (CharMap.fold update (dfa.next h) (state_map, word_map, t))
+
+
+let get_accept_strings dfa =
+  let state_map = [(dfa.start, "")] in
+  let word_map = [("", StateSet.mem dfa.start dfa.finals)] in
+  let q = [dfa.start] in
+  let (state_map, word_map) = search_states dfa ([(dfa.start, "")], 
+                                                 [("", StateSet.mem dfa.start dfa.finals)], 
+                                                 [dfa.start])  in
+  (* format for alpharegex here *)
+  let pos, neg = List.partition (fun (_, b) -> b) word_map in
+  let pos = List.split pos |> fst in 
+  let neg = List.split neg |> fst in 
+  let pos_str = String.concat "\n" pos in
+  let neg_str = String.concat "\n" neg in
+  let output = "++\n" ^ pos_str ^ ("\n--\n") ^ neg_str in
+  let f = open_out "dfa_access_strings.txt" in
+  let _ = Printf.fprintf f "%s" output; close_out f in
+  pos, neg

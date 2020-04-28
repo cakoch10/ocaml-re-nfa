@@ -38,5 +38,6 @@ let () =
      let nfa = Regex.compile (parse_re r) in
      let dfa = Dfa.minimize (Dfa.determinize nfa) in
      let digraph = Nfa_dot.digraph_of_nfa (Dfa.inject dfa) in
+     let pos, neg = Dfa.get_accept_strings dfa in
      Format.printf "%a@." Nfa_dot.format_digraph digraph;
   | _ -> Arg.usage spec usage

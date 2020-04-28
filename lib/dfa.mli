@@ -30,3 +30,5 @@ val determinize : Nfa.nfa -> dfa
 
 val inject : dfa -> Nfa.nfa
 (** [inject dfa] is the deterministic NFA corresponding to [dfa] *)
+
+val get_accept_strings : dfa -> (string * bool) list

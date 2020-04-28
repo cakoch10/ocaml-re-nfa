@@ -33,3 +33,43 @@ let accept nfa inp =
     | [] -> StateSet.(not (is_empty (inter cur nfa.finals)))
     | c :: cs -> step (nextss cur c nfa) cs
   in step nfa.start inp
+
+
+(* let get_accept_strings nfa = *)
+
+
+
+(*
+state_words = {self.minDFA.startstate : Automata.epsilon}
+        words_accepting = {Automata.epsilon : (self.minDFA.startstate in self.minDFA.finalstates)}
+
+        state_queue = set()
+        state_queue.add(self.minDFA.startstate)
+        
+        # for i in self.minDFA.language:
+        #     for s in self.minDFA.gettransitions(self.minDFA.startstate, i):
+        #         state_queue.add(s)
+
+        # state_queue = [self.minDFA.startstate]
+        while len(state_queue) > 0:
+            state = state_queue.pop()
+            word = state_words[state]
+            if word == Automata.epsilon:
+                word = ""
+
+            # need to check all state -> state' transitions
+            for a in self.minDFA.language:
+                for s in self.minDFA.gettransitions(state, a):
+                    # need to check if s has already been seen
+                    if not s in state_words:
+                        new_word = word + a
+                        state_words[s] = new_word
+                        words_accepting[new_word] = (s in self.minDFA.finalstates)
+                        state_queue.add(s)
+        
+        # remove epsilon
+        words_accepting[""] = words_accepting[Automata.epsilon]
+        del words_accepting[Automata.epsilon]
+
+        return words_accepting
+*)
